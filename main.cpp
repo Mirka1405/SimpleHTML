@@ -215,10 +215,14 @@ int main(int argc, char** argv){
     }
     
     std::string path(argv[1]);
+    bool isfile = path.size()>=4&&path.substr(path.size() - 4) == ".sml";
+    
+    if(isfile)path = path.substr(0,path.size() - 4);
+
     std::string filepath(path+".sml");
     auto statdir = fs::status(path);
     auto dest = argc>2?argv[2]:path+"html";
-    if (fs::is_directory(statdir)) {
+    if (!isfile&&fs::is_directory(statdir)) {
         std::cout<<"Copying from dir "<<path<<" to dir "<<dest<<std::endl;
         if (fs::exists(dest)) {
             fs::remove_all(dest);
