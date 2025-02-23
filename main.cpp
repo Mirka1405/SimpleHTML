@@ -210,7 +210,7 @@ void convert(std::ifstream& i, std::ofstream& o) {
 }
 int main(int argc, char** argv){
     if(argc==1){
-        std::cerr<<"Not enough arguments.\nUsage: sml <source file/dir> [result file/dir name]"<<std::endl;
+        std::cerr<<"Not enough arguments.\nUsage: sml <source file/dir> [result file/dir name] [if converting dirs, use this extension]"<<std::endl;
         return 1;
     }
     
@@ -255,7 +255,7 @@ int main(int argc, char** argv){
                     continue;
                 }
                 auto newpath = file;
-                newpath.replace_extension(".html");
+                newpath.replace_extension(argc>3?argv[3]:".html");
                 auto outputfile = std::ofstream(newpath);
                 if (!outputfile) {
                     std::cerr << "Failed to create output file: " << newpath << std::endl;
@@ -278,8 +278,9 @@ int main(int argc, char** argv){
         return 1;
     }
     auto inputfile = std::ifstream(filepath);
-    auto outputfile = std::ofstream(path+".html");
+    auto resultpath = argc>2?argv[2]:path+".html";
+    auto outputfile = std::ofstream(resultpath);
     
     convert(inputfile,outputfile);
-    std::cout << "Processed: " << filepath << " -> " << path+".html" << std::endl;
+    std::cout << "Processed: " << filepath << " -> " << resultpath << std::endl;
 }
